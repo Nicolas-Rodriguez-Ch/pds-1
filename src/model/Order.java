@@ -19,7 +19,7 @@ public class Order {
 
     private static int nextId = 1;
 
-    public Order(int orderId, String dishName, String category, int quantity, String deliveryMethod, String address) {
+    public Order(String dishName, String category, int quantity, String deliveryMethod, String address) {
         this.orderId = nextId++;
         this.dishName = dishName;
         this.category = category;
