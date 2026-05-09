@@ -7,6 +7,7 @@ package ui;
 import model.Order;
 import javax.swing.*;
 import java.util.List;
+import util.Validator;
 
 /**
  *
@@ -111,6 +112,75 @@ public class OrderFormPanel extends JPanel {
             txtAddress.setEnabled(true);
             txtAddress.setText("");
             lblErrorAddress.setVisible(false);
+        });
+
+        btnClear.addActionListener(e -> {
+            txtDishName.setText("");
+            txtDishName.setText("");
+            cbCategory.setSelectedIndex(0);
+            txtQuantity.setText("");
+            deliveryGroup.clearSelection();
+            txtAddress.setText("");
+            txtAddress.setEnabled(false);
+
+            lblErrorDishName.setVisible(false);
+            lblErrorCategory.setVisible(false);
+            lblErrorQuantity.setVisible(false);
+            lblErrorDelivery.setVisible(false);
+            lblErrorAddress.setVisible(false);
+        });
+
+        btnConfirm.addActionListener(e -> {
+
+            String dishName = txtDishName.getText().trim();
+            String category = (String) cbCategory.getSelectedItem();
+            String quantityText = txtQuantity.getText().trim();
+            boolean isDomicilio = rbDelivery.isSelected();
+            boolean isRecogida = rbPickup.isSelected();
+            String address = txtAddress.getText().trim();
+
+            lblErrorDishName.setVisible(false);
+            lblErrorCategory.setVisible(false);
+            lblErrorQuantity.setVisible(false);
+            lblErrorDelivery.setVisible(false);
+            lblErrorAddress.setVisible(false);
+
+            boolean valid = true;
+
+            if (!Validator.validateDishName(dishName)) {
+                lblErrorDishName.setText("⚠ Solo letras, números y espacios");
+                lblErrorDishName.setVisible(true);
+                valid = false;
+            }
+            if (!Validator.validateCategory(category)) {
+                lblErrorCategory.setText("⚠ Selecciona una categoría");
+                lblErrorCategory.setVisible(true);
+                valid = false;
+            }
+            if (!Validator.validateQuantity(quantityText)) {
+                lblErrorQuantity.setText("⚠ Introduce un número positivo");
+                lblErrorQuantity.setVisible(true);
+                valid = false;
+            }
+            if (!Validator.validateDeliveryMethod(isDomicilio, isRecogida)) {
+                lblErrorDelivery.setText("⚠ Selecciona un método de entrega");
+                lblErrorDelivery.setVisible(true);
+                valid = false;
+            }
+            if (!Validator.validateAddress(address, isDomicilio)) {
+                lblErrorAddress.setText("⚠ Ingresa una dirección válida");
+                lblErrorAddress.setVisible(true);
+                valid = false;
+            }
+
+            if (valid) {
+                String deliveryMethod = isDomicilio ? "Domicilio" : "Recogida";
+                Order newOrder = new Order(dishName, category, Integer.parseInt(quantityText), deliveryMethod, address);
+                orderList.add(newOrder);
+                System.out.println("Pedido añadido: " + newOrder.getOrderId());
+
+                btnClear.doClick();
+            }
         });
     }
 }
