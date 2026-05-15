@@ -52,4 +52,13 @@ public class Order {
         return address;
     }
 
+    public static void resetId() {
+        nextId = 1;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{id=" + orderId + ", dish='" + dishName + "', category='" + category +
+               "', qty=" + quantity + ", method='" + deliveryMethod + "', address='" + address + "'}";
+    }
 }

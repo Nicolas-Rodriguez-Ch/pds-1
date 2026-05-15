@@ -8,6 +8,7 @@ import model.Order;
 import javax.swing.*;
 import java.util.List;
 import util.Validator;
+import ui.OrderTableFrame;
 
 /**
  *
@@ -32,9 +33,11 @@ public class OrderFormPanel extends JPanel {
     private JLabel lblErrorAddress;
 
     private List<Order> orderList;
+    private OrderTableFrame tableFrame;
 
-    public OrderFormPanel(List<Order> orderList) {
+    public OrderFormPanel(List<Order> orderList, OrderTableFrame tableFrame) {
         this.orderList = orderList;
+        this.tableFrame = tableFrame;
         initComponents();
     }
 
@@ -109,7 +112,7 @@ public class OrderFormPanel extends JPanel {
         });
 
         rbPickup.addActionListener(e -> {
-            txtAddress.setEnabled(true);
+            txtAddress.setEnabled(false);
             txtAddress.setText("");
             lblErrorAddress.setVisible(false);
         });
@@ -177,6 +180,7 @@ public class OrderFormPanel extends JPanel {
                 String deliveryMethod = isDomicilio ? "Domicilio" : "Recogida";
                 Order newOrder = new Order(dishName, category, Integer.parseInt(quantityText), deliveryMethod, address);
                 orderList.add(newOrder);
+                tableFrame.refreshTable();
                 System.out.println("Pedido añadido: " + newOrder.getOrderId());
 
                 btnClear.doClick();
